@@ -1,0 +1,12 @@
+export { default as HeroSection } from "./HeroSection";
+export { default as FeaturesBar } from "./FeaturesBar";
+export { default as RealProblemSection } from "./RealProblemSection";
+export { default as HowItWorksSection } from "./HowItWorksSection";
+export { default as TwoValuePlanesSection } from "./TwoValuePlanesSection";
+export { default as AIWorkDesignRiskSection } from "./AIWorkDesignRiskSection";
+export { default as WhoItIsForSection } from "./WhoItIsForSection";
+export { default as PrivacyBoundarySection } from "./PrivacyBoundarySection";
+export { default as EvidenceJourneySection } from "./EvidenceJourneySection";
+export { default as GlobalApplicabilitySection } from "./GlobalApplicabilitySection";
+export { default as FAQSection } from "./FAQSection";
+export { default as RequestDemoSection } from "./RequestDemoSection";

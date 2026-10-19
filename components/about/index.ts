@@ -1,0 +1,13 @@
+export { default as AboutHeroSection } from "./AboutHeroSection";
+export { default as WhyWeExistSection } from "./WhyWeExistSection";
+export { default as VisionMissionSection } from "./VisionMissionSection";
+export { default as WhatWeBelieveSection } from "./WhatWeBelieveSection";
+export { default as ProblemsWeSolveSection } from "./ProblemsWeSolveSection";
+export { default as AssuranceMethodSection } from "./AssuranceMethodSection";
+export { default as OurDifferenceSection } from "./OurDifferenceSection";
+export { default as TrustAndPrivacySection } from "./TrustAndPrivacySection";
+export { default as AIAndWorkSection } from "./AIAndWorkSection";
+export { default as WhoWeServeSection } from "./WhoWeServeSection";
+export { default as CorporateIdentitySection } from "./CorporateIdentitySection";
+export { default as AboutFAQSection } from "./AboutFAQSection";
+export { default as AboutCTASection } from "./AboutCTASection";
