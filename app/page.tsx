@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import {
   HeroSection,
   FeaturesBar,
@@ -12,6 +14,10 @@ import {
   FAQSection,
   RequestDemoSection,
 } from "@/components/home";
+
+export const metadata: Metadata = {
+  title: "Zoiko Abate | Psychosocial Risk Management & Work Design",
+};
 
 export default function HomePage() {
   return (
