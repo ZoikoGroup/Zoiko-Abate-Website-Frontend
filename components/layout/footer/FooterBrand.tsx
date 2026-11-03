@@ -11,10 +11,10 @@ export default function FooterBrand() {
         className="inline-flex w-fit items-center rounded-full bg-white px-5 py-3"
       >
         <Image
-          src="/logo.png"
+          src="/logo-wordmark.webp"
           alt="Zoiko Abate"
           width={170}
-          height={44}
+          height={26}
           className="h-auto w-[170px]"
         />
       </Link>

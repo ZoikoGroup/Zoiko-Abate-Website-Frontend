@@ -7,10 +7,8 @@ import { ChevronDown } from "lucide-react";
 import { DROPDOWNS, NAV_ORDER } from "./data";
 import MegaPanel from "./MegaPanel";
 
-// Panels with four cards (Platform) need the full width.
-// Panels with two or three stacked cards are narrower.
-const WIDE_WIDTH = "w-[1100px]";
-const NARROW_WIDTH = "w-[860px]";
+const ITEM_BASE =
+  "inline-flex min-h-11 items-center gap-1 rounded-[10px] px-3.5 text-base font-semibold leading-6 transition-colors";
 
 export default function DesktopNav() {
   const [active, setActive] = useState<string | null>(null);
@@ -43,17 +41,15 @@ export default function DesktopNav() {
   }, []);
 
   const current = DROPDOWNS.find((d) => d.key === active) ?? null;
-  const widthClass =
-    current && current.cards.length === 4 ? WIDE_WIDTH : NARROW_WIDTH;
 
   return (
     <div
       ref={wrapperRef}
       onMouseLeave={() => setActive(null)}
-      className="hidden items-center self-stretch lg:flex"
+      className="hidden flex-1 items-center justify-end self-stretch xl:flex"
     >
       <nav aria-label="Primary" className="flex h-full items-center">
-        <ul className="flex h-full items-center gap-10">
+        <ul className="flex h-full items-center gap-0.5">
           {NAV_ORDER.map((entry) => {
             if (entry.type === "link") {
               return (
@@ -64,7 +60,7 @@ export default function DesktopNav() {
                 >
                   <Link
                     href={entry.href}
-                    className="text-[14px] font-medium text-[#14181C] transition-colors hover:text-[#C2493A]"
+                    className={`${ITEM_BASE} text-[#1E152A] hover:bg-[#F7F2F6]`}
                   >
                     {entry.label}
                   </Link>
@@ -85,15 +81,18 @@ export default function DesktopNav() {
                   aria-expanded={isOpen}
                   aria-controls={`mega-${menu.key}`}
                   onClick={() => setActive(isOpen ? null : menu.key)}
-                  className={`inline-flex h-full items-center gap-1.5 text-[14px] font-medium transition-colors ${
-                    isOpen ? "text-[#C2493A]" : "text-[#14181C]"
+                  className={`${ITEM_BASE} ${
+                    isOpen
+                      ? "bg-[#FCE3DC] text-[#DC3F2A]"
+                      : "text-[#1E152A] hover:bg-[#F7F2F6]"
                   }`}
                 >
                   {menu.label}
                   <ChevronDown
-                    className={`h-3.5 w-3.5 transition-transform ${
+                    className={`size-4 transition-transform ${
                       isOpen ? "rotate-180" : ""
                     }`}
+                    strokeWidth={2}
                     aria-hidden="true"
                   />
                 </button>
@@ -104,9 +103,8 @@ export default function DesktopNav() {
       </nav>
 
       {current ? (
-        <div
-          className={`absolute left-1/2 top-full z-40 max-w-[calc(100vw-2rem)] -translate-x-1/2 ${widthClass}`}
-        >
+        // The top padding bridges the gap below the header so hovering into the panel keeps it open.
+        <div className="absolute left-1/2 top-full z-40 w-[1264px] max-w-[calc(100vw-2rem)] -translate-x-1/2 pt-1.5">
           <MegaPanel
             item={current}
             id={`mega-${current.key}`}

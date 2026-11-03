@@ -1,253 +1,387 @@
 import {
+  Activity,
   BookOpen,
-  Building2,
+  Briefcase,
+  Calculator,
+  ChartColumn,
+  CircleHelp,
+  ClipboardCheck,
+  Clock,
+  Compass,
   Cpu,
-  Database,
-  FileBarChart,
   FileText,
-  HelpCircle,
+  Globe,
+  Layers,
+  LayoutGrid,
   Lock,
+  Mail,
+  MapPin,
+  MessageSquare,
   Scale,
+  Shield,
   ShieldCheck,
+  Sparkles,
+  Target,
   TrendingUp,
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-export type Tone = "peach" | "mint" | "plain";
-
-export type MenuCard = {
+export type MenuItem = {
   title: string;
   text: string;
   href: string;
   icon: LucideIcon;
-  tone: Tone;
 };
 
-export type MenuFooterNote = {
-  text: string;
-  mutedText: string;
-  mutedIcon: "globe" | "users";
-  mutedTitle?: string;
+export type MenuColumn = {
+  label?: string;
+  items: readonly MenuItem[];
 };
+
+/** Left-hand card of a dropdown: either a photo card or a card listing the steps. */
+export type MenuFeature =
+  | { kind: "image"; image: string; imageAlt: string }
+  | { kind: "steps"; body: string; steps: readonly string[] };
+
+/** Optional strip along the bottom of a dropdown. */
+export type MenuFooter =
+  | { kind: "flow"; steps: readonly string[]; note: string }
+  | { kind: "cta"; title: string; text: string; label: string; href: string };
 
 export type Dropdown = {
   key: string;
   label: string;
   eyebrow: string;
-  heading: string;
-  body: string;
-  cta: string;
-  ctaHref: string;
-  image: string;
-  imageAlt: string;
-  cards: readonly MenuCard[];
-  note: MenuFooterNote;
-  loop?: readonly string[];
-  loopNote?: string;
+  /** Lines of the feature card heading, rendered on separate lines. */
+  heading: readonly string[];
+  cta: { label: string; href: string };
+  feature: MenuFeature;
+  columns: readonly [MenuColumn, MenuColumn];
+  footer?: MenuFooter;
 };
+
+export const ASSURANCE_STEPS = ["Detect", "Attribute", "Control", "Verify"] as const;
 
 export const DROPDOWNS: readonly Dropdown[] = [
   {
     key: "platform",
     label: "Platform",
-    eyebrow: "PLATFORM",
-    heading: "Built for accountability. Designed for action.",
-    body: "From organizational signals to work-design outcomes, the platform brings risk, evidence and governance together — so you can act with confidence.",
-    cta: "View the platform",
-    ctaHref: "#",
-    image: "/navbar/1.png",
-    imageAlt: "Bright meeting room with a long table and city views",
-    cards: [
+    eyebrow: "Platform",
+    heading: ["A unified platform for", "work-design and", "psychosocial risk."],
+    cta: { label: "Explore the platform", href: "#" },
+    feature: {
+      kind: "image",
+      image: "/navbar/platform-team-meeting.webp",
+      imageAlt: "Colleagues in discussion around a meeting table",
+    },
+    columns: [
       {
-        title: "Risk Assurance",
-        text: "Detect organizational work hazards, attribute work-design drivers, assign controls, verify status.",
-        href: "#",
-        icon: ShieldCheck,
-        tone: "peach",
+        label: "Risk assurance",
+        items: [
+          {
+            title: "Risk Assurance",
+            text: "Identify organization-level hazards; assign and verify controls.",
+            href: "#",
+            icon: Shield,
+          },
+          {
+            title: "Evidence & Governance",
+            text: "Status, owners, due dates, residual risk and evidence for every control.",
+            href: "#",
+            icon: ClipboardCheck,
+          },
+          {
+            title: "AI Work-Design Risk",
+            text: "Autonomy, cognitive load, monitoring intensity and human override.",
+            href: "#",
+            icon: Layers,
+          },
+        ],
       },
       {
-        title: "Work-Design Outcomes",
-        text: "Compare conditions after interventions, with comparison period, quality and limitations labeled.",
-        href: "#",
-        icon: TrendingUp,
-        tone: "mint",
-      },
-      {
-        title: "Evidence & Governance",
-        text: "Document ownership, verification evidence, review schedules and residual risk.",
-        href: "#",
-        icon: FileText,
-        tone: "peach",
-      },
-      {
-        title: "AI Work-Design Risk",
-        text: "Evaluate human–AI handoffs, workload, autonomy, role clarity and override.",
-        href: "#",
-        icon: Cpu,
-        tone: "plain",
+        label: "Work-design outcomes",
+        items: [
+          {
+            title: "Work-Design Outcomes",
+            text: "Study organizational conditions after intervention, analyzed separately.",
+            href: "#",
+            icon: ChartColumn,
+          },
+          {
+            title: "Measurement Method",
+            text: "Cohorts, comparison periods and labeled evidence quality.",
+            href: "#",
+            icon: Activity,
+          },
+          {
+            title: "Platform Overview",
+            text: "The operating discipline from signals to action, evidence and review.",
+            href: "#",
+            icon: LayoutGrid,
+          },
+        ],
       },
     ],
-    loop: ["Detect", "Attribute", "Control", "Verify"],
-    loopNote: "The assurance loop",
-    note: {
-      text: "",
-      mutedText: "Outcomes never close assurance records.",
-      mutedIcon: "globe",
+    footer: {
+      kind: "flow",
+      steps: ASSURANCE_STEPS,
+      note: "A favorable outcome result never closes an open risk finding.",
     },
   },
   {
     key: "solutions",
     label: "Solutions",
-    eyebrow: "SOLUTIONS",
-    heading:
-      "Designed for launch sectors first, with expansion added only when supported.",
-    body: "Focused solutions for legal teams, with additional sectors added as substantive content becomes available.",
-    cta: "Explore our solutions",
-    ctaHref: "#",
-    image: "/navbar/2.png",
-    imageAlt: "Two legal professionals in conversation",
-    cards: [
+    eyebrow: "Solutions",
+    heading: ["Built for complex", "work. Across", "professions."],
+    cta: { label: "Explore all solutions", href: "#" },
+    feature: {
+      kind: "steps",
+      body: "Address the organizational conditions behind psychosocial risk, wherever expert work is coordinated.",
+      steps: ASSURANCE_STEPS,
+    },
+    columns: [
       {
-        title: "Law Firms",
-        text: "Help your firm detect, evidence and govern work-design risk across engagements and teams.",
-        href: "#",
-        icon: Scale,
-        tone: "peach",
+        label: "By organization",
+        items: [
+          {
+            title: "Professional Services",
+            text: "Work-design risk for high-intensity expert work.",
+            href: "#",
+            icon: Briefcase,
+          },
+          {
+            title: "Legal Services & Teams",
+            text: "Law firms and in-house legal functions.",
+            href: "#",
+            icon: Scale,
+          },
+          {
+            title: "Accounting, Tax & Audit",
+            text: "Engagement cycles, review load and deadlines.",
+            href: "#",
+            icon: Calculator,
+          },
+          {
+            title: "Consulting & Advisory",
+            text: "Project concurrency, handoffs and recovery.",
+            href: "#",
+            icon: Compass,
+          },
+        ],
       },
       {
-        title: "In-House Legal Teams",
-        text: "Give your legal team visibility into work-design risk across the business, with evidence and governance built in.",
-        href: "#",
-        icon: Users,
-        tone: "mint",
+        label: "By organizational challenge",
+        items: [
+          {
+            title: "Workload & Recovery",
+            text: "Detect recurring demand and recovery strain.",
+            href: "#",
+            icon: Clock,
+          },
+          {
+            title: "Psychosocial Risk Controls",
+            text: "Assign actions and verify organizational controls.",
+            href: "#",
+            icon: ShieldCheck,
+          },
+          {
+            title: "AI & Work Redesign",
+            text: "Assess changes to workload and human oversight.",
+            href: "#",
+            icon: Sparkles,
+          },
+          {
+            title: "Work-Design Outcomes",
+            text: "Measure organizational change after action.",
+            href: "#",
+            icon: TrendingUp,
+          },
+        ],
       },
     ],
-    note: {
-      text: "Visible label means a real destination, not a placeholder.",
-      mutedTitle: "Professional Services",
-      mutedText:
-        "Added only when a substantive cross-sector page is published.",
-      mutedIcon: "users",
+    footer: {
+      kind: "cta",
+      title: "For executives, operations, people, risk and transformation leaders",
+      text: "Discover approaches to sustainable, accountable work design.",
+      label: "Solutions overview",
+      href: "#",
     },
   },
   {
     key: "trust",
     label: "Trust",
-    eyebrow: "TRUST",
-    heading: "Privacy-first trust, with clear boundaries.",
-    body: "Understand what data is visible, where it is held, and how governance and AI decisions are controlled.",
-    cta: "Explore trust",
-    ctaHref: "#",
-    image: "/navbar/3.png",
-    imageAlt: "Two colleagues reviewing a tablet together",
-    cards: [
+    eyebrow: "Trust",
+    heading: ["Built on privacy,", "security and", "accountability."],
+    cta: { label: "Explore trust", href: "#" },
+    feature: {
+      kind: "image",
+      image: "/navbar/trust-advisory-conversation.webp",
+      imageAlt: "Two colleagues in conversation",
+    },
+    columns: [
       {
-        title: "Privacy & Data Boundaries",
-        text: "Explain visibility boundaries, Practice-Vault separation, and organizational-level reporting.",
-        href: "#",
-        icon: Lock,
-        tone: "peach",
+        items: [
+          {
+            title: "Privacy & Data Boundaries",
+            text: "Cohort-only organizational reporting, never individual scoring.",
+            href: "#",
+            icon: Lock,
+          },
+          {
+            title: "Practice-Vault Separation",
+            text: "Organizational insight stays separate from private, individual support.",
+            href: "#",
+            icon: Layers,
+          },
+          {
+            title: "Security & Governance",
+            text: "How access, approvals, auditability and service boundaries are governed.",
+            href: "#",
+            icon: ShieldCheck,
+          },
+        ],
       },
       {
-        title: "Security & Governance",
-        text: "Show security posture, governance controls, human review, and operational safeguards.",
-        href: "#",
-        icon: Database,
-        tone: "mint",
-      },
-      {
-        title: "Responsible AI",
-        text: "Describe bounded AI use, human oversight, accountability, and clear limitations.",
-        href: "#",
-        icon: Cpu,
-        tone: "peach",
+        items: [
+          {
+            title: "Responsible AI",
+            text: "Where AI can assist, and where deterministic controls and people decide.",
+            href: "#",
+            icon: Cpu,
+          },
+          {
+            title: "Evidence & Accountability",
+            text: "Auditable, evidence-led decisions with named human owners.",
+            href: "#",
+            icon: Scale,
+          },
+          {
+            title: "Jurisdictional Approach",
+            text: "Legal obligations and release controls that vary by location.",
+            href: "#",
+            icon: Globe,
+          },
+        ],
       },
     ],
-    note: {
-      text: "Trust pages describe safeguards clearly, without unsupported claims.",
-      mutedText: "Jurisdiction coverage is explained in reviewed page content.",
-      mutedIcon: "globe",
-    },
   },
   {
     key: "resources",
     label: "Resources",
-    eyebrow: "RESOURCES",
-    heading: "Practical knowledge for more confident decisions.",
-    body: "Explore evidence-led articles, frameworks, and practical guidance on trust, governance, and responsible AI in the workplace.",
-    cta: "Explore resources",
-    ctaHref: "#",
-    image: "/navbar/4.png",
-    imageAlt: "Two colleagues reviewing a printed chart",
-    cards: [
+    eyebrow: "Resources",
+    heading: ["Insights, guidance", "and practical tools to", "drive change."],
+    cta: { label: "Explore resources", href: "#" },
+    feature: {
+      kind: "image",
+      image: "/navbar/resources-colleagues-reviewing.webp",
+      imageAlt: "Two colleagues reviewing documents together",
+    },
+    columns: [
       {
-        title: "Insights",
-        text: "Evidence-led articles, analysis, and practical perspectives on trust, governance, and AI.",
-        href: "#",
-        icon: FileBarChart,
-        tone: "peach",
+        items: [
+          {
+            title: "Insights & Research",
+            text: "Evidence-based work-design issues, policy context and references.",
+            href: "#",
+            icon: ChartColumn,
+          },
+          {
+            title: "Guides & Frameworks",
+            text: "Plain-language process resources to improve work and reduce risk.",
+            href: "#",
+            icon: BookOpen,
+          },
+          {
+            title: "FAQs",
+            text: "Direct answers for buyers, privacy reviewers and employee representatives.",
+            href: "#",
+            icon: CircleHelp,
+          },
+        ],
       },
       {
-        title: "Work-Design Glossary",
-        text: "Definitions, terms, and plain-language explanations for key concepts.",
-        href: "#",
-        icon: BookOpen,
-        tone: "mint",
-      },
-      {
-        title: "FAQs",
-        text: "Quick answers to common product, trust, and implementation questions.",
-        href: "#",
-        icon: HelpCircle,
-        tone: "peach",
+        items: [
+          {
+            title: "Work-Design Glossary",
+            text: "Psychosocial hazards, attribution, controls, verification and evidence quality.",
+            href: "#",
+            icon: FileText,
+          },
+          {
+            title: "Implementation Playbooks",
+            text: "Step-by-step frameworks for successful adoption.",
+            href: "#",
+            icon: Layers,
+          },
+          {
+            title: "Contact an Expert",
+            text: "Get specialist guidance for your organization.",
+            href: "#",
+            icon: MessageSquare,
+          },
+        ],
       },
     ],
-    note: {
-      text: "Every link points to a useful, published page.",
-      mutedText: "Avoid empty libraries and superficial keyword pages.",
-      mutedIcon: "globe",
-    },
   },
   {
     key: "company",
     label: "Company",
-    eyebrow: "COMPANY",
-    heading: "Meet the team behind Zoiko Abate.",
-    body: "Learn who builds Abate, how the product is positioned, and how to contact the team with confidence.",
-    cta: "Explore company",
-    ctaHref: "#",
-    image: "/navbar/5.png",
-    imageAlt: "Four colleagues smiling around a laptop",
-    cards: [
+    eyebrow: "Company",
+    heading: ["A global team with a", "clear purpose:", "Change the work."],
+    cta: { label: "Explore company", href: "/about" },
+    feature: {
+      kind: "image",
+      image: "/navbar/company-global-team.webp",
+      imageAlt: "Four colleagues smiling together",
+    },
+    columns: [
       {
-        title: "About Zoiko Abate",
-        text: "Understand the product story, organizational context, and the approved entity and offering description.",
-        href: "/about",
-        icon: Building2,
-        tone: "peach",
+        items: [
+          {
+            title: "About Zoiko Abate",
+            text: "Our thesis, purpose and what makes us different.",
+            href: "/about",
+            icon: Users,
+          },
+          {
+            title: "Vision & Mission",
+            text: "Our long-term ambition and commitment.",
+            href: "#",
+            icon: Target,
+          },
+          {
+            title: "Our Approach",
+            text: "A people-centered, evidence-led and responsible approach.",
+            href: "#",
+            icon: Layers,
+          },
+        ],
       },
       {
-        title: "Contact",
-        text: "Reach the team for product questions, demo coordination, and business inquiries through an approved contact route.",
-        href: "#",
-        icon: Users,
-        tone: "mint",
+        items: [
+          {
+            title: "Headquarters",
+            text: "Our global and European headquarters.",
+            href: "#",
+            icon: MapPin,
+          },
+          {
+            title: "Contact Us",
+            text: "Get in touch with our team.",
+            href: "#",
+            icon: Mail,
+          },
+          {
+            title: "Careers",
+            text: "Build your career at Zoiko Abate.",
+            href: "#",
+            icon: Briefcase,
+          },
+        ],
       },
     ],
-    note: {
-      text: "This menu is intentionally compact, with only meaningful destinations.",
-      mutedText:
-        "Corporate claims, contact details, and legal entity labeling must be approved before publication.",
-      mutedIcon: "globe",
-    },
   },
-] as const;
-
-export type PlainLink = { label: string; href: string };
-
-export const SIMPLE_LINKS: readonly PlainLink[] = [
-  { label: "How It Works", href: "#" },
 ] as const;
 
 /** Order of the top-level nav. "link" entries are plain links, "menu" entries open a dropdown. */
