@@ -1,23 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ChevronRight,
-  Globe,
-  Info,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
-import type { Dropdown, Tone } from "./data";
-
-const TONES: Record<Tone, { card: string; icon: string }> = {
-  peach: { card: "bg-[#FCEFEA]", icon: "bg-[#FADCD3] text-[#D8503F]" },
-  mint: { card: "bg-[#EEF3F1]", icon: "bg-[#DCEAE5] text-[#0F6B58]" },
-  plain: {
-    card: "border border-[#E6E3DE] bg-white",
-    icon: "bg-[#EFF1F2] text-[#1F2A33]",
-  },
-};
+import { ArrowRight, ChevronRight } from "lucide-react";
+import type { Dropdown, MenuColumn, MenuFooter } from "./data";
 
 type Props = {
   item: Dropdown;
@@ -26,141 +10,221 @@ type Props = {
 };
 
 export default function MegaPanel({ item, id, onNavigate }: Props) {
-  const MutedIcon = item.note.mutedIcon === "users" ? Users : Globe;
-  const hasLoop = Boolean(item.loop);
-
   return (
     <div
       id={id}
       role="region"
       aria-label={`${item.label} menu`}
-      className="absolute left-1/2 top-full z-40 w-full max-w-[1100px] -translate-x-1/2 rounded-3xl border border-[#E9E6E0] bg-white p-3 shadow-[0_24px_60px_rgba(35,25,45,0.16)]"
+      className="overflow-hidden rounded-3xl bg-white p-3 shadow-[0_2px_8px_rgba(42,22,48,0.06),0_24px_60px_-20px_rgba(42,22,48,0.28)] outline outline-1 -outline-offset-1 outline-[#ECE6EE]"
     >
-      <div className="grid grid-cols-[340px_1fr] gap-3">
-        <div className="flex flex-col overflow-hidden rounded-2xl bg-[#2A1F35] text-white">
-          <div
-            className="relative h-[200px] w-full"
-            style={{ clipPath: "polygon(0 0, 100% 0, 100% 78%, 0 100%)" }}
-          >
-            <Image
-              src={item.image}
-              alt={item.imageAlt}
-              fill
-              sizes="340px"
-              className="object-cover"
+      <div className="grid gap-3 xl:grid-cols-[360px_1fr]">
+        <FeatureCard item={item} onNavigate={onNavigate} />
+
+        <div className="grid grid-cols-2 py-1.5 pl-2.5 pr-1.5">
+          {item.columns.map((column, index) => (
+            <Column
+              key={column.label ?? index}
+              column={column}
+              bordered={index > 0}
+              onNavigate={onNavigate}
             />
-          </div>
-          <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
-            <p className="text-[12px] font-semibold uppercase tracking-wide text-[#7FD9C4]">
-              {item.eyebrow}
-            </p>
-            <h3 className="mt-2 text-[22px] font-semibold leading-[1.2] tracking-[-0.01em]">
-              {item.heading}
-            </h3>
-            <p className="mt-3 text-[13px] leading-[1.6] text-white/80">
-              {item.body}
-            </p>
-            <Link
-              href={item.ctaHref}
-              onClick={onNavigate}
-              className="mt-auto inline-flex w-fit items-center gap-2 border-b border-[#F4A58F] pb-1 pt-4 text-[15px] font-semibold text-[#F4A58F] transition-opacity hover:opacity-80"
-            >
-              {item.cta}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="flex flex-col">
-          <ul
-            className={`grid flex-1 gap-3 ${
-              item.cards.length === 4 ? "grid-cols-2" : "grid-cols-1"
-            }`}
-          >
-            {item.cards.map((card) => {
-              const tone = TONES[card.tone];
-              const Icon = card.icon;
-              return (
-                <li key={card.title}>
-                  <Link
-                    href={card.href}
-                    onClick={onNavigate}
-                    className={`group flex h-full items-start gap-4 rounded-2xl px-5 py-4 transition-shadow hover:shadow-md ${tone.card}`}
-                  >
-                    <span
-                      className={`flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-xl ${tone.icon}`}
-                    >
-                      <Icon className="h-6 w-6" aria-hidden="true" />
-                    </span>
-                    <span className="flex-1">
-                      <span className="block text-[17px] font-semibold text-[#14181C]">
-                        {card.title}
-                      </span>
-                      <span className="mt-1.5 block text-[13px] leading-[1.55] text-[#6B6F73]">
-                        {card.text}
-                      </span>
-                    </span>
-                    <ChevronRight
-                      className="mt-1 h-4 w-4 shrink-0 text-[#14181C]"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="mt-3 flex items-center gap-4 border-t border-[#E9E6E0] px-3 pt-3 text-[12px]">
-            {hasLoop ? (
-              <>
-                <Info
-                  className="h-6 w-6 shrink-0 fill-[#14181C] text-white"
-                  aria-hidden="true"
-                />
-                <ol className="flex items-center gap-2 font-semibold text-[#14181C]">
-                  {item.loop?.map((step, index) => (
-                    <li key={step} className="flex items-center gap-2">
-                      {step}
-                      {index < (item.loop?.length ?? 0) - 1 ? (
-                        <ArrowRight
-                          className="h-3.5 w-3.5 text-[#D8503F]"
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                    </li>
-                  ))}
-                </ol>
-                <span className="border-l border-[#E1DED8] pl-4 text-[#8A8D90]">
-                  {item.loopNote}
-                </span>
-                <span className="ml-auto inline-flex items-center gap-2 text-[#D8503F]">
-                  <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                  {item.note.mutedText}
-                </span>
-              </>
-            ) : (
-              <>
-                <Info
-                  className="h-6 w-6 shrink-0 fill-[#14181C] text-white"
-                  aria-hidden="true"
-                />
-                <p className="max-w-[220px] text-[#14181C]">{item.note.text}</p>
-                <div className="flex flex-1 items-center gap-3 border-l border-[#E1DED8] pl-4 text-[#9A9DA0]">
-                  <MutedIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
-                  <p>
-                    {item.note.mutedTitle ? (
-                      <span className="block font-semibold">
-                        {item.note.mutedTitle}
-                      </span>
-                    ) : null}
-                    {item.note.mutedText}
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
+          ))}
         </div>
       </div>
+
+      {item.footer ? (
+        <Footer footer={item.footer} onNavigate={onNavigate} />
+      ) : null}
+    </div>
+  );
+}
+
+function FeatureCard({ item, onNavigate }: Omit<Props, "id">) {
+  const { feature } = item;
+
+  const heading = (
+    <h3 className="text-2xl font-bold leading-7 text-white">
+      {item.heading.map((line) => (
+        <span key={line} className="block">
+          {line}
+        </span>
+      ))}
+    </h3>
+  );
+
+  const eyebrow = (
+    <p className="text-xs font-bold uppercase leading-5 tracking-wide text-white opacity-90">
+      {item.eyebrow}
+    </p>
+  );
+
+  if (feature.kind === "steps") {
+    return (
+      <div className="hidden min-h-[338px] flex-col rounded-2xl bg-[radial-gradient(120%_90%_at_100%_0%,#5B2655_0%,#2A1430_60%)] px-7 py-6 xl:flex">
+        {eyebrow}
+        <div className="mt-1.5">{heading}</div>
+        <p className="mt-3 text-sm leading-[22px] text-white/80">
+          {feature.body}
+        </p>
+
+        <ol className="mt-auto grid grid-cols-2 gap-x-6 gap-y-3 border-t border-white/15 pt-5">
+          {feature.steps.map((step, index) => (
+            <li key={step} className="flex items-center gap-3">
+              <span className="flex size-6 items-center justify-center rounded-md bg-white/10 text-xs font-semibold text-[#F0957F]">
+                {index + 1}
+              </span>
+              <span className="text-sm font-semibold text-white">{step}</span>
+            </li>
+          ))}
+        </ol>
+
+        <Link
+          href={item.cta.href}
+          onClick={onNavigate}
+          className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-bold text-[#F0957F] transition-opacity hover:opacity-80"
+        >
+          {item.cta.label}
+          <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative hidden min-h-[338px] flex-col justify-end overflow-hidden rounded-2xl bg-[#2A1430] px-7 py-6 xl:flex">
+      <div className="absolute inset-x-0 top-0 h-[191px]">
+        <Image
+          src={feature.image}
+          alt={feature.imageAlt}
+          fill
+          sizes="360px"
+          className="object-cover"
+        />
+      </div>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(58,26,63,0)_26%,rgba(58,26,63,0.55)_42%,#2A1430_56%)]"
+      />
+
+      <div className="relative flex flex-col gap-1.5 pr-14 pt-1">
+        {eyebrow}
+        {heading}
+      </div>
+
+      <Link
+        href={item.cta.href}
+        onClick={onNavigate}
+        aria-label={item.cta.label}
+        className="absolute bottom-6 right-6 flex size-10 items-center justify-center rounded-full bg-[#F05A47] text-white shadow-[0_0_0_4px_rgba(240,90,71,0.22)] transition-transform hover:scale-105"
+      >
+        <ArrowRight className="size-5" aria-hidden="true" />
+      </Link>
+    </div>
+  );
+}
+
+function Column({
+  column,
+  bordered,
+  onNavigate,
+}: {
+  column: MenuColumn;
+  bordered: boolean;
+  onNavigate: () => void;
+}) {
+  return (
+    <div
+      className={`flex flex-col gap-1 px-2.5 pt-2 ${
+        bordered ? "border-l border-[#ECE6EE]" : ""
+      }`}
+    >
+      {column.label ? (
+        <p className="px-4 text-xs font-bold leading-5 text-[#5A4D56]">
+          {column.label}
+        </p>
+      ) : null}
+
+      <ul className="flex flex-col">
+        {column.items.map((link, index) => {
+          const Icon = link.icon;
+          return (
+            <li key={link.title} className="relative">
+              {index > 0 ? (
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-4 -top-px h-px bg-[#ECE6EE]"
+                />
+              ) : null}
+              <Link
+                href={link.href}
+                onClick={onNavigate}
+                className="group flex items-start gap-3.5 rounded-2xl p-4 transition-colors hover:bg-[#FAF6F9]"
+              >
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#F6EEF4] text-[#6B2A5E]">
+                  <Icon className="size-6" strokeWidth={1.6} aria-hidden="true" />
+                </span>
+                <span className="flex flex-1 flex-col gap-0.5">
+                  <span className="text-base font-bold leading-5 text-[#1E152A]">
+                    {link.title}
+                  </span>
+                  <span className="text-sm leading-5 text-[#5A4D56]">
+                    {link.text}
+                  </span>
+                </span>
+                <ChevronRight
+                  className="mt-[3px] size-4 shrink-0 text-[#5A4D56] transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function Footer({
+  footer,
+  onNavigate,
+}: {
+  footer: MenuFooter;
+  onNavigate: () => void;
+}) {
+  if (footer.kind === "flow") {
+    return (
+      <div className="mx-2.5 mb-1.5 mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-2xl bg-[#E8EEEA] px-5 py-3.5 text-sm leading-5 text-[#5A4D56]">
+        <ol className="flex flex-wrap items-center gap-2 font-bold">
+          {footer.steps.map((step, index) => (
+            <li key={step} className="flex items-center gap-2">
+              {step}
+              {index < footer.steps.length - 1 ? (
+                <span aria-hidden="true">→</span>
+              ) : null}
+            </li>
+          ))}
+        </ol>
+        <p>{footer.note}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-2.5 mb-1.5 mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-2xl bg-[#E8EEEA] px-5 py-3.5">
+      <div>
+        <p className="text-base font-bold leading-6 text-[#1E152A]">
+          {footer.title}
+        </p>
+        <p className="text-sm leading-5 text-[#5A4D56]">{footer.text}</p>
+      </div>
+      <Link
+        href={footer.href}
+        onClick={onNavigate}
+        className="inline-flex items-center gap-2 text-base font-bold text-[#CC3F2A] transition-opacity hover:opacity-80"
+      >
+        {footer.label}
+        <ArrowRight className="size-4" aria-hidden="true" />
+      </Link>
     </div>
   );
 }
